@@ -177,3 +177,6 @@ htmlcov/
 .env.*
 !.env.example
 data/
+
+# Locally staged offline content; may contain unpublished or sensitive material
+sync-inbox/
