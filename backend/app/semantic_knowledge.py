@@ -52,7 +52,7 @@ def _embed(text: str) -> list[float]:
         raise RuntimeError("Local embedding runtime could not complete the request.") from exc
 
 def _chunks(content: str, max_chars: int = 1200, overlap: int = 160) -> list[str]:
-    paragraphs = [re.sub(r"\\s+", " ", part).strip() for part in re.split(r"\\n\\s*\\n", content) if part.strip()]
+    paragraphs = [re.sub(r"\s+", " ", part).strip() for part in re.split(r"\n\s*\n", content) if part.strip()]
     chunks, current = [], ""
     for paragraph in paragraphs:
         while len(paragraph) > max_chars:
