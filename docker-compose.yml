@@ -4,14 +4,14 @@ services:
       context: ./backend
     container_name: nomad-api
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     restart: unless-stopped
 
   nomad-web:
     build:
       context: .
       args:
-        NEXT_PUBLIC_NOMAD_API_URL: http://localhost:8000
+        NOMAD_API_INTERNAL_URL: http://nomad-api:8000
     container_name: nomad-web
     ports:
       - "3000:3000"
