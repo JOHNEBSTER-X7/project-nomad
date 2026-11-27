@@ -9,6 +9,11 @@ type Health = {
   mode: string;
 };
 
+type NetworkStatus = {
+  network_mode: string; connectivity: string; external_sync_enabled: boolean;
+  device_discovery: string; services: { api: string; local_ai: string; knowledge_index: string };
+};
+
 type SearchResult = {
   title: string;
   source: string;
@@ -18,6 +23,7 @@ type SearchResult = {
 
 export default function Home() {
   const [health, setHealth] = useState<Health | null>(null);
+  const [network, setNetwork] = useState<NetworkStatus | null>(null);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -27,6 +33,10 @@ export default function Home() {
 
   useEffect(() => {
     let active = true;
+    fetch("/api/network/status")
+      .then((response) => { if (!response.ok) throw new Error("Network status unavailable"); return response.json(); })
+      .then((data: NetworkStatus) => { if (active) setNetwork(data); })
+      .catch(() => { if (active) setNetwork(null); });
     fetch("/health")
       .then((response) => {
         if (!response.ok) throw new Error("Backend unavailable");
@@ -83,7 +93,7 @@ export default function Home() {
           <span className="brand-mark">N</span>
           <span>PROJECT <strong>NOMAD</strong></span>
         </Link>
-        <span className="version">PROTOTYPE V0.1</span>
+        <span className="version">PROTOTYPE V0.4</span>
       </nav>
 
       <section className="hero">
@@ -99,6 +109,20 @@ export default function Home() {
           <span className="status-divider">/</span>
           <span>External AI: not configured</span>
         </div>
+      </section>
+
+      <section className="workspace" aria-labelledby="network-title">
+        <div className="section-heading"><div><div className="eyebrow muted">NOMAD NETWORK</div><h2 id="network-title">Local infrastructure status</h2></div><span className="local-tag">OPERATOR VIEW</span></div>
+        {network ? (
+          <div className="principle-grid">
+            <div><span>NETWORK MODE</span><h3>{network.network_mode.toUpperCase()}</h3><p>Local-first network configuration.</p></div>
+            <div><span>API SERVICE</span><h3>{network.services.api}</h3><p>Local gateway service health.</p></div>
+            <div><span>LOCAL AI</span><h3>{network.services.local_ai}</h3><p>Optional local inference runtime.</p></div>
+            <div><span>KNOWLEDGE INDEX</span><h3>{network.services.knowledge_index}</h3><p>Local retrieval index status.</p></div>
+            <div><span>DEVICE DISCOVERY</span><h3>{network.device_discovery}</h3><p>No automatic network scanning is performed.</p></div>
+            <div><span>EXTERNAL SYNC</span><h3>{network.external_sync_enabled ? "ENABLED" : "DISABLED"}</h3><p>External synchronisation is opt-in.</p></div>
+          </div>
+        ) : <p className="message">Network status service is not reachable.</p>}
       </section>
 
       <section className="workspace" aria-labelledby="search-title">
