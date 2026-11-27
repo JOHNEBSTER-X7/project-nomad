@@ -83,7 +83,7 @@ Do not attach learner data, sensitive network diagrams, credentials, detailed se
 
 | Agency | Official channel | Date contacted | Response | Next action |
 |---|---|---|---|---|
-| LASUBEB | lagos_subeb@lagosstate.gov.ng | Not contacted | Pending | Send exploratory email after project identity/contact details are verified |
+| LASUBEB | lagos_subeb@lagosstate.gov.ng | 27 November 2026 | Exploratory partnership enquiry sent by project lead; awaiting response | Await acknowledgement; if no response, follow up through the official contact page |
 | Lagos State Ministry of Education | mbse@lagosstate.gov.ng | Not contacted | Pending | Send parallel or follow-up enquiry |
 | Education District | Confirm after routing | Not contacted | Pending | Contact only when directed |
 | Relevant LGEA | Confirm locality first | Not contacted | Pending | Contact only after routing |
@@ -92,5 +92,5 @@ Do not attach learner data, sensitive network diagrams, credentials, detailed se
 
 - Contact details are taken from official Lagos State/LASUBEB web pages checked on the date above; verify them again immediately before sending.
 - Public websites may change. A published contact does not confirm that an email was received or that a proposal will be considered.
-- No outreach has been sent by this repository update.
+- The project lead reports that the exploratory LASUBEB email was sent on 27 November 2026. This log records the reported action; it is not an email-delivery receipt or confirmation of receipt by LASUBEB.
 - No institution, government agency, school, funder or pilot partner has endorsed or committed to PROJECT NOMAD.
