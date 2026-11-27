@@ -171,12 +171,20 @@ Semantic retrieval remains disabled unless explicitly configured. Start the opti
 ```bash
 NOMAD_EMBEDDINGS_PROVIDER=ollama
 NOMAD_OLLAMA_EMBED_MODEL=nomic-embed-text
+NOMAD_SEMANTIC_MIN_SCORE=0.35
 ```
 
-Build or refresh the local SQLite index from approved Markdown/text resources (run from the backend directory):
+With these values saved in the repository-root .env file, start the optional local runtime and download the embedding model:
 
 ```bash
-python -m app.index_knowledge
+docker compose --profile ai up --build -d
+docker compose exec nomad-ollama ollama pull nomic-embed-text
+```
+
+Build or refresh the local SQLite index inside the API container:
+
+```bash
+docker compose exec nomad-api python -m app.index_knowledge
 ```
 
 Check `/api/knowledge/index/status`. The search endpoint uses local semantic retrieval when the index is ready and falls back to lexical search if semantic retrieval is disabled or unavailable. The indexer is an operator command, not a public API endpoint. Do not index identifiable learner data.
