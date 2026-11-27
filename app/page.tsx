@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 
 type Health = {
@@ -82,10 +83,10 @@ export default function Home() {
   return (
     <main className="shell">
       <nav className="topbar">
-        <a className="brand" href="/" aria-label="PROJECT NOMAD home">
+        <Link className="brand" href="/" aria-label="PROJECT NOMAD home">
           <span className="brand-mark">N</span>
           <span>PROJECT <strong>NOMAD</strong></span>
-        </a>
+        </Link>
         <span className="version">PROTOTYPE V0.1</span>
       </nav>
 
