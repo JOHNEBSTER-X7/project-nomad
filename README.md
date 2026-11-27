@@ -1,2 +1,172 @@
-# project-nomad
-Open-source community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.
+# PROJECT NOMAD
+
+**Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
+
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![Status: Research and prototype planning](https://img.shields.io/badge/status-research%20%26%20prototype%20planning-orange.svg)](#project-status)
+
+PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
+
+The initial pilot is proposed for **schools and educational communities in Lagos State, Nigeria**. No pilot school, institutional partner or deployment is currently confirmed.
+
+## Why NOMAD
+
+Many educational and community organisations face a combination of unreliable connectivity, high recurring service costs, limited access to locally operated computing, and dependence on external platforms. NOMAD aims to make resilient digital infrastructure more accessible by placing essential services closer to the people who use and govern them.
+
+The project is based on five principles:
+
+- **Local-first:** Core services should continue to work without continuous internet access.
+- **Community ownership:** Participating communities should have meaningful control over their infrastructure and its operation.
+- **Open and reusable:** Software, deployment guidance and governance resources should be publicly accessible under clear licences.
+- **Privacy and safety by design:** Collect as little personal data as possible, with special safeguards for school environments and children.
+- **Maintainability:** Hardware, software and operational procedures should be understandable, repairable and supportable locally.
+
+## Proposed system
+
+| Component | Purpose |
+|---|---|
+| **NOMAD AI CORE** | Local AI model serving and inference management. |
+| **NOMAD KNOWLEDGE** | Offline educational resources, document indexing and local knowledge retrieval. |
+| **NOMAD NETWORK** | Local Wi-Fi/LAN access and service discovery. |
+| **NOMAD ENERGY** | Renewable-energy and battery integration where appropriate. |
+| **NOMAD GOVERNANCE** | Access control, privacy, community decision-making and maintenance practices. |
+
+These are planned components, not claims of completed functionality.
+
+## Initial Lagos pilot: proposed scope
+
+The first field study will seek to identify one suitable school or educational community in Lagos State. The pilot will be co-designed with school leadership, teachers, learners and relevant community stakeholders.
+
+Preliminary engineering hypotheses for evaluation—not deployment commitments—include:
+
+- Up to 100 concurrent users in a first test configuration.
+- Approximately 4 TB of local storage.
+- Local AI inference and retrieval over approved content.
+- Offline access through a local web application and wireless network.
+- Power resilience appropriate to the selected site.
+- Training and documented handover to local operators.
+
+Actual capacity, hardware and energy requirements must be validated through workload tests and a site assessment.
+
+## Architecture direction
+
+The initial design is a small, modular system rather than a complex microservice platform:
+
+1. A web portal / progressive web application for users.
+2. A local gateway and API for service access.
+3. A local AI runtime selected through model and hardware benchmarking.
+4. A knowledge service for approved documents and resources.
+5. Local persistent storage and database services.
+6. Administrative controls, logging and recovery procedures.
+7. Optional, controlled synchronisation when external connectivity is available.
+
+A system must not silently send school or learner data to external AI providers. External connectivity and synchronisation should be explicit, configurable and documented.
+
+## Technology direction
+
+Candidate technologies may include:
+
+- **Frontend:** React, Next.js and TypeScript.
+- **API:** Python and FastAPI.
+- **AI runtime:** llama.cpp or another locally deployable runtime chosen after evaluation.
+- **Data:** PostgreSQL and local file/object storage.
+- **Deployment:** Docker for reproducible installation.
+- **Operations:** Linux, local networking, monitoring and backup tooling.
+
+Technology choices remain provisional until a working prototype and hardware benchmarks justify them. Model weights, datasets and third-party packages retain their own licences and terms; the repository's Apache-2.0 licence does not relicense those materials.
+
+## Privacy, safeguarding and responsible AI
+
+The school pilot must be designed around privacy, safety and human oversight.
+
+- Do not collect identifiable learner information unless it is demonstrably necessary and properly authorised.
+- Do not use student data to train or fine-tune models by default.
+- Do not deploy facial recognition, behavioural profiling or automated high-stakes decisions about learners.
+- Use age-appropriate content controls and clear routes for reporting harmful or inaccurate outputs.
+- Ensure teachers and authorised adults remain responsible for educational decisions.
+- Complete appropriate privacy, safeguarding and security reviews before field testing.
+- Obtain required institutional approvals, notices and consent before processing personal data.
+
+NOMAD is an infrastructure and research project, not a substitute for professional teaching, medical advice or public services.
+
+## Open development and governance
+
+The project intends to publish reusable source code, technical documentation, deployment instructions, evaluation methods and community governance resources. Contributions should be transparent and reviewable.
+
+The project will seek community input before deciding how local resources are selected, how infrastructure is administered, who can access services, and how the system is maintained or retired.
+
+No school, university, government body, NGO or other institution is represented as a partner unless a collaboration is explicitly agreed and documented.
+
+## Project status
+
+**Current stage: research, design and partner discovery.**
+
+- [ ] Confirm a Lagos pilot school or educational community.
+- [ ] Recruit research, technical and community collaborators.
+- [ ] Conduct community needs assessment and site survey.
+- [ ] Validate data protection, safeguarding and governance requirements.
+- [ ] Build the first offline knowledge and local inference prototype.
+- [ ] Benchmark performance, reliability, energy use and recovery.
+- [ ] Conduct a controlled pilot only after approvals.
+- [ ] Publish deployment, maintenance and evaluation documentation.
+
+Milestones and performance targets will be revised as evidence is gathered. The project does not currently claim an operational deployment, confirmed partners or active users.
+
+## Contributing
+
+Early contributions are welcome in architecture review, local AI evaluation, offline-first design, networking, energy systems, privacy engineering, accessibility, educational content governance and documentation.
+
+Before contributing:
+
+1. Open an issue describing the proposal or problem.
+2. Avoid submitting personal, confidential or sensitive school/learner data.
+3. Follow the project contribution guidance as it is established.
+4. Include tests and documentation for changes where applicable.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) when available. Until then, use GitHub Issues for discussion.
+
+## Repository structure
+
+The repository will evolve as implementation begins. Planned areas include:
+
+```text
+project-nomad/
+├── apps/
+│   └── web-portal/
+├── services/
+│   ├── ai-core/
+│   ├── knowledge-engine/
+│   ├── network-manager/
+│   └── identity-access/
+├── infrastructure/
+│   ├── docker/
+│   ├── networking/
+│   └── monitoring/
+├── hardware/
+│   ├── bom/
+│   └── energy/
+├── docs/
+│   ├── architecture/
+│   ├── deployment/
+│   ├── governance/
+│   └── safeguarding/
+├── research/
+└── tests/
+```
+
+Directories and components will be added when their initial scope is agreed; this is a target structure, not a claim that they are already implemented.
+
+## Licence
+
+The repository's original software and documentation are intended to be made available under the [Apache License 2.0](LICENSE), unless a file states otherwise. Third-party models, datasets, media and dependencies may have separate licences and must be reviewed individually.
+
+## Contact
+
+**Project lead:** John Ebster-Davids  
+**Email:** dragoxprotocol@proton.me  
+**LinkedIn:** https://www.linkedin.com/in/john-ebster-davids-807aaa293/  
+**Project website:** https://dragoxprotocol.carrd.co/
+
+---
+
+*Community-owned intelligence. Open infrastructure. Sustainable digital independence.*
