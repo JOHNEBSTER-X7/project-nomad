@@ -23,7 +23,7 @@ def network_status(*, ai: dict, knowledge: dict) -> dict:
         "services": {
             "api": "online",
             "local_ai": "available" if ai.get("available") else ("disabled" if not ai.get("enabled") else "unavailable"),
-            "knowledge_index": "ready" if knowledge.get("enabled") and knowledge.get("indexed") else "lexical_fallback",
+            "knowledge_index": "ready" if knowledge.get("enabled") and knowledge.get("indexed_chunks", 0) > 0 and knowledge.get("indexed_model") == knowledge.get("model") else "lexical_fallback",
         },
         "safety": {"network_scanning": False, "client_inventory_exposed": False, "external_sync_opt_in": True},
     }
