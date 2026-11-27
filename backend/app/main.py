@@ -1,14 +1,15 @@
 """PROJECT NOMAD local API — offline knowledge and optional local AI."""
 import os
 from pathlib import Path
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from .ai_runtime import generate_local_answer, runtime_status
 from .semantic_knowledge import search_knowledge, semantic_index_status
 from .network_status import network_status
+from .operator_security import require_operator
 
-app = FastAPI(title="PROJECT NOMAD API", version="0.4.0", description="Local-first API for offline knowledge retrieval and optional local AI.")
+app = FastAPI(title="PROJECT NOMAD API", version="0.5.0", description="Local-first API for offline knowledge retrieval and optional local AI.")
 allowed_origins = os.getenv("NOMAD_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
 app.add_middleware(CORSMiddleware, allow_origins=[o.strip() for o in allowed_origins if o.strip()], allow_credentials=False, allow_methods=["GET", "POST"], allow_headers=["*"])
 
@@ -18,6 +19,10 @@ class AskRequest(BaseModel):
 
 def _knowledge_dir():
     return Path(os.getenv("NOMAD_KNOWLEDGE_DIR", str(Path(__file__).resolve().parents[1] / "knowledge")))
+
+@app.get("/api/operator/status")
+def operator_status(operator: dict = Depends(require_operator)):
+    return {"operator": operator, "network": network_status(ai=runtime_status(), knowledge=semantic_index_status())}
 
 @app.get("/api/network/status")
 def network_status_endpoint():
