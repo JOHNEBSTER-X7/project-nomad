@@ -3,7 +3,7 @@
 **Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Status: V0.2 prototype](https://img.shields.io/badge/status-V0.2%20prototype-blue.svg)](#project-status)
+[![Status: V0.3 prototype](https://img.shields.io/badge/status-V0.2%20prototype-blue.svg)](#project-status)
 
 PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
 
@@ -97,7 +97,7 @@ The project will seek community input before deciding how local resources are se
 
 No school, university, government body, NGO or other institution is represented as a partner unless a collaboration is explicitly agreed and documented.
 
-## Run the V0.2 prototype locally
+## Run the V0.3 prototype locally
 
 ### Requirements
 
@@ -153,7 +153,7 @@ pytest -q
 
 ## Current prototype capabilities
 
-The V0.2 branch adds an optional Ollama adapter and API endpoints for local model status and source-grounded answers. Local AI remains disabled by default; lexical search continues to work independently. The integration is not semantic/vector retrieval, does not independently verify model citations, and does not include authentication, production hardening or a field deployment. See [the local AI runtime design](docs/architecture/local-ai-runtime.md).
+V0.2 adds an optional Ollama adapter for local model status and source-grounded answers. V0.3 adds an optional local semantic knowledge index using Ollama embeddings and SQLite, while retaining lexical search as a fallback. Both AI generation and embeddings are disabled by default. See the [local AI runtime design](docs/architecture/local-ai-runtime.md) and [semantic knowledge engine design](docs/architecture/semantic-knowledge-engine.md).
 
 To enable the optional local runtime with Docker, set `NOMAD_AI_PROVIDER=ollama` in your environment and run:
 
@@ -164,15 +164,34 @@ docker compose exec nomad-ollama ollama pull llama3.2:3b
 
 Then set `NOMAD_OLLAMA_MODEL` to the installed model name if you chose a different model. Check `http://localhost:3000/api/ai/status` and use `POST /api/ai/answer` with a JSON body such as `{"question":"What is offline learning?"}`. Model download requires internet access initially; once downloaded, inference can run locally. Review model licence, hardware requirements and safeguarding suitability before use.
 
+### Optional semantic retrieval
+
+Semantic retrieval remains disabled unless explicitly configured. Start the optional Ollama service, pull an embedding model you have evaluated, then configure:
+
+```bash
+NOMAD_EMBEDDINGS_PROVIDER=ollama
+NOMAD_OLLAMA_EMBED_MODEL=nomic-embed-text
+```
+
+Build or refresh the local SQLite index from approved Markdown/text resources (run from the backend directory):
+
+```bash
+python -m app.index_knowledge
+```
+
+Check `/api/knowledge/index/status`. The search endpoint uses local semantic retrieval when the index is ready and falls back to lexical search if semantic retrieval is disabled or unavailable. The indexer is an operator command, not a public API endpoint. Do not index identifiable learner data.
+
 ## Project status
 
-**Current stage: V0.2 local AI integration prototype under review; research, design and partner discovery continue.**
+**Current stage: V0.3 semantic knowledge engine prototype in development; research, design and partner discovery continue.**
 
 - [ ] Confirm a Lagos pilot school or educational community.
 - [ ] Recruit research, technical and community collaborators.
 - [ ] Conduct community needs assessment and site survey.
 - [ ] Validate data protection, safeguarding and governance requirements.
-- [ ] Build the first offline knowledge and local inference prototype.
+- [ ] Evaluate semantic retrieval quality, multilingual coverage and source-grounding.
+- [ ] Add access controls and operational safeguards before any multi-user field test.
+- [ ] Build and benchmark the first offline knowledge and local inference prototype.
 - [ ] Benchmark performance, reliability, energy use and recovery.
 - [ ] Conduct a controlled pilot only after approvals.
 - [ ] Publish deployment, maintenance and evaluation documentation.
