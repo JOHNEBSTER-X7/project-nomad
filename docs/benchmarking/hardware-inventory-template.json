@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "site_id": "replace-with-non-identifying-site-code",
+  "recorded_at_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "operator": "role-or-team-not-personal-data",
+  "compute": {
+    "device_make_model": "unknown",
+    "cpu": "unknown",
+    "memory_gb": null,
+    "gpu_or_accelerator": "none-or-unknown",
+    "storage_type": "unknown",
+    "storage_capacity_gb": null,
+    "operating_system": "unknown"
+  },
+  "network": {
+    "gateway_model": "unknown",
+    "access_point_models": [],
+    "backhaul": "offline-or-described",
+    "client_device_mix": []
+  },
+  "ai": {
+    "runtime": "disabled",
+    "runtime_version": null,
+    "model_id": null,
+    "quantisation": null,
+    "embedding_model_id": null
+  },
+  "energy": {
+    "power_source": "unknown",
+    "battery_chemistry": null,
+    "battery_nominal_wh": null,
+    "solar_array_w": null,
+    "meter_model": null
+  },
+  "notes": "Do not include learner names, device identifiers, precise home addresses or other personal data."
+}
