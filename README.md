@@ -3,7 +3,7 @@
 **Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Status: V0.6 prototype](https://img.shields.io/badge/status-V0.6%20prototype-blue.svg)](#project-status)
+[![Status: V0.7 benchmarking foundation](https://img.shields.io/badge/status-V0.7%20benchmarking%20foundation-blue.svg)](#project-status)
 
 PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
 
@@ -208,6 +208,26 @@ docker compose exec nomad-api python -m app.index_knowledge
 ```
 
 Check `/api/knowledge/index/status`. The search endpoint uses local semantic retrieval when the index is ready and falls back to lexical search if semantic retrieval is disabled or unavailable. The indexer is an operator command, not a public API endpoint. Do not index identifiable learner data.
+
+
+## V0.7 benchmarking foundation
+
+V0.7 adds opt-in measurement tools and protocols—not benchmark claims or hardware certification.
+
+- API latency/throughput probe: `scripts/api_benchmark.py`.
+- First-pass daily energy and battery/solar estimate: `scripts/energy_budget.py`.
+- Measurement methodology: `docs/benchmarking/plan.md`.
+- Hardware inventory template: `docs/benchmarking/hardware-inventory-template.json`.
+- Safe energy measurement procedure: `docs/benchmarking/energy-measurement-protocol.md`.
+
+Run from the repository root:
+
+```bash
+python scripts/api_benchmark.py --url http://127.0.0.1:3000/health --requests 30 --concurrency 2 --output results/api-health.json
+python scripts/energy_budget.py --loads-json '[{"name":"server","watts":120,"hours_per_day":24}]' --voltage 24 --sun-hours 4
+```
+
+The API benchmark sends real HTTP requests to the URL supplied; use a local instance and small workloads first. The energy calculator uses explicit assumptions and is not an electrical installation design. No actual hardware, school network, solar system or field pilot has been benchmarked or validated. Capacity targets remain hypotheses until measured under a documented site-specific workload.
 
 ## Project status
 
