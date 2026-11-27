@@ -15,7 +15,7 @@ def test_index_build_and_semantic_search_use_local_vectors(tmp_path, monkeypatch
     monkeypatch.setenv("NOMAD_EMBEDDINGS_PROVIDER", "ollama")
     monkeypatch.setenv("NOMAD_INDEX_PATH", str(db))
     monkeypatch.setenv("NOMAD_OLLAMA_EMBED_MODEL", "test-embed")
-    monkeypatch.setattr(semantic, "_embed", lambda text: [1.0, 0.0] if "solar" in text.lower() else [0.0, 1.0])
+    monkeypatch.setattr(semantic, "_embed", lambda text: [1.0, 0.0])
     result = semantic.build_semantic_index(knowledge)
     assert result["indexed_chunks"] == 1
     found, mode = semantic.search_knowledge("sunlight", knowledge, limit=3)
