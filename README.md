@@ -3,7 +3,7 @@
 **Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Status: V0.6 prototype](https://img.shields.io/badge/status-V0.6%20prototype-blue.svg)](#project-status)
+[![Status: V0.7 benchmarking foundation](https://img.shields.io/badge/status-V0.7%20benchmarking%20foundation-blue.svg)](#project-status)
 
 PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
 
