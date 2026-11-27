@@ -4,6 +4,7 @@ No remote URLs are fetched. The operator stages files locally; a manifest
 declares source IDs and SHA-256 hashes. Only configured source IDs are accepted.
 """
 import hashlib
+import hmac
 import json
 import os
 import re
@@ -81,7 +82,7 @@ def _validated_bundle(bundle_id: str) -> list[dict]:
         except UnicodeDecodeError as exc:
             raise ValueError("Knowledge documents must be valid UTF-8.") from exc
         actual = hashlib.sha256(content).hexdigest()
-        if actual != expected.lower():
+        if not hmac.compare_digest(actual, expected.lower()):
             raise ValueError("SHA-256 verification failed for a staged source.")
         target_name = f"sync-{source_id}-{actual[:16]}{suffix}"
         validated.append({"source_id": source_id, "file": filename, "sha256": actual, "bytes": len(content), "target_name": target_name, "content": content})
