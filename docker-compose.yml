@@ -1,0 +1,20 @@
+services:
+  nomad-api:
+    build:
+      context: ./backend
+    container_name: nomad-api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  nomad-web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_NOMAD_API_URL: http://localhost:8000
+    container_name: nomad-web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - nomad-api
+    restart: unless-stopped
