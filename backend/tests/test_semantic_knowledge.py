@@ -30,3 +30,35 @@ def test_lexical_fallback_when_semantic_is_disabled(tmp_path, monkeypatch):
     results, mode = semantic.search_knowledge("offline learning", knowledge)
     assert mode == "local-lexical-search"
     assert results
+
+def test_model_mismatch_falls_back_to_lexical(tmp_path, monkeypatch):
+    knowledge = tmp_path / "knowledge"
+    knowledge.mkdir()
+    (knowledge / "solar.md").write_text("# Solar power\\n\\nSolar energy is renewable.", encoding="utf-8")
+    db = tmp_path / "index.sqlite3"
+    monkeypatch.setenv("NOMAD_EMBEDDINGS_PROVIDER", "ollama")
+    monkeypatch.setenv("NOMAD_INDEX_PATH", str(db))
+    monkeypatch.setenv("NOMAD_OLLAMA_EMBED_MODEL", "model-b")
+    monkeypatch.setattr(semantic, "_embed", lambda text: [1.0, 0.0])
+    # Build with model A, then switch the configured model.
+    monkeypatch.setenv("NOMAD_OLLAMA_EMBED_MODEL", "model-a")
+    semantic.build_semantic_index(knowledge)
+    monkeypatch.setenv("NOMAD_OLLAMA_EMBED_MODEL", "model-b")
+    results, mode = semantic.search_knowledge("solar", knowledge)
+    assert mode == "local-lexical-fallback"
+    assert results
+
+def test_semantic_threshold_can_return_no_evidence(tmp_path, monkeypatch):
+    knowledge = tmp_path / "knowledge"
+    knowledge.mkdir()
+    (knowledge / "solar.md").write_text("# Solar power\\n\\nSolar panels generate electricity.", encoding="utf-8")
+    db = tmp_path / "index.sqlite3"
+    monkeypatch.setenv("NOMAD_EMBEDDINGS_PROVIDER", "ollama")
+    monkeypatch.setenv("NOMAD_INDEX_PATH", str(db))
+    monkeypatch.setenv("NOMAD_OLLAMA_EMBED_MODEL", "test-embed")
+    monkeypatch.setenv("NOMAD_SEMANTIC_MIN_SCORE", "0.9")
+    monkeypatch.setattr(semantic, "_embed", lambda text: [1.0, 0.0] if text.startswith("#") else [0.0, 1.0])
+    semantic.build_semantic_index(knowledge)
+    results, mode = semantic.search_knowledge("completely unrelated", knowledge)
+    assert mode == "local-ollama-semantic-search"
+    assert results == []
