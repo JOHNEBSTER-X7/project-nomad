@@ -3,7 +3,7 @@
 **Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Status: V0.1 prototype](https://img.shields.io/badge/status-V0.1%20prototype-blue.svg)](#project-status)
+[![Status: V0.2 prototype](https://img.shields.io/badge/status-V0.2%20prototype-blue.svg)](#project-status)
 
 PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
 
@@ -97,7 +97,7 @@ The project will seek community input before deciding how local resources are se
 
 No school, university, government body, NGO or other institution is represented as a partner unless a collaboration is explicitly agreed and documented.
 
-## Run the V0.1 prototype locally
+## Run the V0.2 prototype locally
 
 ### Requirements
 
@@ -153,11 +153,20 @@ pytest -q
 
 ## Current prototype capabilities
 
-V0.1 includes a Next.js portal, a FastAPI health/search API, and transparent lexical search over local Markdown/text files. It does **not** yet include semantic/vector search, a generative AI model, authentication, production hardening or a field deployment. Search results are excerpts from local documents, not AI-generated answers.
+The V0.2 branch adds an optional Ollama adapter and API endpoints for local model status and source-grounded answers. Local AI remains disabled by default; lexical search continues to work independently. The integration is not semantic/vector retrieval, does not independently verify model citations, and does not include authentication, production hardening or a field deployment. See [the local AI runtime design](docs/architecture/local-ai-runtime.md).
+
+To enable the optional local runtime with Docker, set `NOMAD_AI_PROVIDER=ollama` in your environment and run:
+
+```bash
+docker compose --profile ai up --build -d
+docker compose exec nomad-ollama ollama pull llama3.2:3b
+```
+
+Then set `NOMAD_OLLAMA_MODEL` to the installed model name if you chose a different model. Check `http://localhost:3000/api/ai/status` and use `POST /api/ai/answer` with a JSON body such as `{"question":"What is offline learning?"}`. Model download requires internet access initially; once downloaded, inference can run locally. Review model licence, hardware requirements and safeguarding suitability before use.
 
 ## Project status
 
-**Current stage: V0.1 software prototype foundation; research, design and partner discovery continue.**
+**Current stage: V0.2 local AI integration prototype under review; research, design and partner discovery continue.**
 
 - [ ] Confirm a Lagos pilot school or educational community.
 - [ ] Recruit research, technical and community collaborators.
