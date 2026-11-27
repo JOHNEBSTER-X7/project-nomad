@@ -3,7 +3,7 @@
 **Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Status: V0.3 prototype](https://img.shields.io/badge/status-V0.2%20prototype-blue.svg)](#project-status)
+[![Status: V0.4 prototype](https://img.shields.io/badge/status-V0.4%20prototype-blue.svg)](#project-status)
 
 PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
 
@@ -153,6 +153,8 @@ pytest -q
 
 ## Current prototype capabilities
 
+V0.4 adds a local infrastructure status endpoint and a basic operator status view for the API, optional local AI, knowledge index, configured network mode and external-sync setting. It deliberately does not scan the LAN, administer Wi-Fi clients or expose device addresses.
+
 V0.2 adds an optional Ollama adapter for local model status and source-grounded answers. V0.3 adds an optional local semantic knowledge index using Ollama embeddings and SQLite, while retaining lexical search as a fallback. Both AI generation and embeddings are disabled by default. See the [local AI runtime design](docs/architecture/local-ai-runtime.md) and [semantic knowledge engine design](docs/architecture/semantic-knowledge-engine.md).
 
 To enable the optional local runtime with Docker, set `NOMAD_AI_PROVIDER=ollama` in your environment and run:
@@ -191,7 +193,7 @@ Check `/api/knowledge/index/status`. The search endpoint uses local semantic ret
 
 ## Project status
 
-**Current stage: V0.3 semantic knowledge engine prototype in development; research, design and partner discovery continue.**
+**Current stage: V0.4 network infrastructure foundation in development; research, design and partner discovery continue.**
 
 - [ ] Confirm a Lagos pilot school or educational community.
 - [ ] Recruit research, technical and community collaborators.
