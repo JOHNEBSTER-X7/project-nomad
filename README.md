@@ -3,7 +3,7 @@
 **Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Status: V0.5 prototype](https://img.shields.io/badge/status-V0.5%20prototype-blue.svg)](#project-status)
+[![Status: V0.6 prototype](https://img.shields.io/badge/status-V0.6%20prototype-blue.svg)](#project-status)
 
 PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
 
@@ -148,6 +148,14 @@ Generate a strong random token on the NOMAD host, for example with `openssl rand
 
 The protected endpoint is `GET /api/operator/status` and requires `Authorization: Bearer <token>`. The public network status endpoint remains informational and read-only. This prototype does not yet provide individual accounts, MFA, recovery, audit trails, granular roles, rate limiting or session revocation.
 
+### Stage and import an offline content bundle
+
+Create a folder under `sync-inbox/`, for example `sync-inbox/bundle-001/`, and place approved `.md` or `.txt` files in it. Add a `manifest.json` containing `version: 1`, the exact `bundle_id`, and a `sources` array with each file's `source_id`, `file` and SHA-256 digest. Configure `NOMAD_SYNC_ALLOWED_SOURCE_IDS` as a comma-separated list of source IDs approved by the site operator. Keep the staging directory on the NOMAD host; do not commit private or learner data.
+
+Use the authenticated endpoints `POST /api/operator/sync/preview` and then `POST /api/operator/sync/import`, each with JSON `{"bundle_id":"bundle-001"}` and the operator Bearer token. Preview verifies the bundle without importing. Import is idempotent and writes content using a hash-derived filename. If semantic retrieval is enabled, rebuild the local index after import with `docker compose exec nomad-api python -m app.index_knowledge`.
+
+This is a local staged-bundle import workflow, not a remote synchronisation engine. SHA-256 checks integrity against the manifest but does not prove publisher identity. Review publisher and content before allowing a source ID.
+
 ### Run backend tests
 
 From the repository root:
@@ -158,6 +166,8 @@ pytest -q
 ```
 
 ## Current prototype capabilities
+
+V0.6 adds controlled, operator-triggered import of staged offline knowledge bundles. The API verifies manifest version, configured source-ID allowlists, SHA-256 digests, UTF-8 text, filename safety and file-size limits before copying Markdown or text files into the local knowledge library. It does not fetch remote URLs or automatically trust incoming content. See [controlled content synchronisation](docs/architecture/controlled-content-sync.md).
 
 V0.5 adds a fail-closed single-operator bearer-token gate for the read-only `/api/operator/status` endpoint. The API reads `NOMAD_OPERATOR_TOKEN`; tokens shorter than 32 characters are rejected as unconfigured. The browser keeps the entered token in page memory only. This is a bootstrap control, not multi-user identity or production-grade security. Do not expose the prototype to untrusted networks. See [operator access control](docs/architecture/operator-access-control.md).
 
@@ -201,7 +211,7 @@ Check `/api/knowledge/index/status`. The search endpoint uses local semantic ret
 
 ## Project status
 
-**Current stage: V0.5 operator access-control foundation in development; research, design and partner discovery continue.**
+**Current stage: V0.6 controlled content synchronisation foundation in development; research, design and partner discovery continue.**
 
 - [ ] Confirm a Lagos pilot school or educational community.
 - [ ] Recruit research, technical and community collaborators.
