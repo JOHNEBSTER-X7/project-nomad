@@ -8,10 +8,14 @@ from .ai_runtime import generate_local_answer, runtime_status
 from .semantic_knowledge import search_knowledge, semantic_index_status
 from .network_status import network_status
 from .operator_security import require_operator
+from .sync_bundle import preview_bundle, import_bundle
 
-app = FastAPI(title="PROJECT NOMAD API", version="0.5.0", description="Local-first API for offline knowledge retrieval and optional local AI.")
+app = FastAPI(title="PROJECT NOMAD API", version="0.6.0", description="Local-first API for offline knowledge retrieval and optional local AI.")
 allowed_origins = os.getenv("NOMAD_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
 app.add_middleware(CORSMiddleware, allow_origins=[o.strip() for o in allowed_origins if o.strip()], allow_credentials=False, allow_methods=["GET", "POST"], allow_headers=["*"])
+
+class SyncRequest(BaseModel):
+    bundle_id: str = Field(min_length=1, max_length=64, pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 
 class AskRequest(BaseModel):
     question: str = Field(min_length=3, max_length=1000)
@@ -19,6 +23,28 @@ class AskRequest(BaseModel):
 
 def _knowledge_dir():
     return Path(os.getenv("NOMAD_KNOWLEDGE_DIR", str(Path(__file__).resolve().parents[1] / "knowledge")))
+
+@app.post("/api/operator/sync/preview")
+def operator_sync_preview(request: SyncRequest, operator: dict = Depends(require_operator)):
+    try:
+        return preview_bundle(request.bundle_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except (ValueError, OSError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.post("/api/operator/sync/import")
+def operator_sync_import(request: SyncRequest, operator: dict = Depends(require_operator)):
+    try:
+        return import_bundle(request.bundle_id, _knowledge_dir())
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except (ValueError, OSError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 @app.get("/api/operator/status")
 def operator_status(operator: dict = Depends(require_operator)):
