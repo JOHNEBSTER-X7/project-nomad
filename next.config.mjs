@@ -11,6 +11,10 @@ const nextConfig = {
         destination: `${apiOrigin}/api/knowledge/:path*`,
       },
       {
+        source: "/api/network/:path*",
+        destination: `${apiOrigin}/api/network/:path*`,
+      },
+      {
         source: "/api/ai/:path*",
         destination: `${apiOrigin}/api/ai/:path*`,
       },
