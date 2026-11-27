@@ -17,8 +17,12 @@ services:
       NOMAD_NETWORK_MODE: ${NOMAD_NETWORK_MODE:-lan}
       NOMAD_EXTERNAL_SYNC_ENABLED: ${NOMAD_EXTERNAL_SYNC_ENABLED:-false}
       NOMAD_OPERATOR_TOKEN: ${NOMAD_OPERATOR_TOKEN:-}
+      NOMAD_SYNC_INBOX: /sync-inbox
+      NOMAD_SYNC_ALLOWED_SOURCE_IDS: ${NOMAD_SYNC_ALLOWED_SOURCE_IDS:-}
+      NOMAD_SYNC_MAX_FILE_BYTES: ${NOMAD_SYNC_MAX_FILE_BYTES:-2000000}
     volumes:
       - nomad-data:/data
+      - ./sync-inbox:/sync-inbox:ro
     restart: unless-stopped
 
   nomad-web:
