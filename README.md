@@ -3,7 +3,7 @@
 **Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Status: Research and prototype planning](https://img.shields.io/badge/status-research%20%26%20prototype%20planning-orange.svg)](#project-status)
+[![Status: V0.1 prototype](https://img.shields.io/badge/status-V0.1%20prototype-blue.svg)](#project-status)
 
 PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
 
@@ -97,9 +97,67 @@ The project will seek community input before deciding how local resources are se
 
 No school, university, government body, NGO or other institution is represented as a partner unless a collaboration is explicitly agreed and documented.
 
+## Run the V0.1 prototype locally
+
+### Requirements
+
+- Node.js 22 or later and npm
+- Python 3.12 or later
+- Docker Engine and Docker Compose (optional)
+
+### Start with Docker
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+- Web portal on the host: http://localhost:3000
+- API health on the host: http://localhost:8000/health
+- API search on the host: http://localhost:8000/api/knowledge/search?q=offline%20learning
+
+For other devices on the same local network, open `http://<NOMAD-SERVER-LAN-IP>:3000`. The browser sends API requests to the same web origin; the NOMAD web container proxies them to the API over the private Docker network. The API port is bound to host loopback only and is not directly exposed to the LAN.
+
+### Run services without Docker
+
+Start the API:
+
+```bash
+cd backend
+python -m venv .venv
+# Activate the virtual environment, then:
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+In a second terminal, from the repository root:
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:3000. The frontend expects the API at http://localhost:8000 by default. Set `NEXT_PUBLIC_NOMAD_API_URL` before building if a different address is required.
+
+### Run backend tests
+
+From the repository root:
+
+```bash
+cd backend
+pytest -q
+```
+
+## Current prototype capabilities
+
+V0.1 includes a Next.js portal, a FastAPI health/search API, and transparent lexical search over local Markdown/text files. It does **not** yet include semantic/vector search, a generative AI model, authentication, production hardening or a field deployment. Search results are excerpts from local documents, not AI-generated answers.
+
 ## Project status
 
-**Current stage: research, design and partner discovery.**
+**Current stage: V0.1 software prototype foundation; research, design and partner discovery continue.**
 
 - [ ] Confirm a Lagos pilot school or educational community.
 - [ ] Recruit research, technical and community collaborators.
@@ -123,7 +181,7 @@ Before contributing:
 3. Follow the project contribution guidance as it is established.
 4. Include tests and documentation for changes where applicable.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) when available. Until then, use GitHub Issues for discussion.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution process. Use GitHub Issues for discussion.
 
 ## Repository structure
 
