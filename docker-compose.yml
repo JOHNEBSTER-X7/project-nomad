@@ -5,6 +5,11 @@ services:
     container_name: nomad-api
     ports:
       - "127.0.0.1:8000:8000"
+    environment:
+      NOMAD_AI_PROVIDER: ${NOMAD_AI_PROVIDER:-disabled}
+      NOMAD_OLLAMA_BASE_URL: ${NOMAD_OLLAMA_BASE_URL:-http://nomad-ollama:11434}
+      NOMAD_OLLAMA_MODEL: ${NOMAD_OLLAMA_MODEL:-llama3.2:3b}
+      NOMAD_AI_TIMEOUT_SECONDS: ${NOMAD_AI_TIMEOUT_SECONDS:-45}
     restart: unless-stopped
 
   nomad-web:
@@ -18,3 +23,14 @@ services:
     depends_on:
       - nomad-api
     restart: unless-stopped
+
+  nomad-ollama:
+    image: ollama/ollama:latest
+    container_name: nomad-ollama
+    profiles: ["ai"]
+    volumes:
+      - nomad-ollama-models:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  nomad-ollama-models:
