@@ -25,6 +25,10 @@ export default function Home() {
   const [health, setHealth] = useState<Health | null>(null);
   const [network, setNetwork] = useState<NetworkStatus | null>(null);
   const [query, setQuery] = useState("");
+  const [operatorToken, setOperatorToken] = useState("");
+  const [operatorMessage, setOperatorMessage] = useState("Operator access requires a server-configured token.");
+  const [operatorAuthenticated, setOperatorAuthenticated] = useState(false);
+  const [operatorLoading, setOperatorLoading] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(
@@ -52,6 +56,20 @@ export default function Home() {
       active = false;
     };
   }, []);
+
+  async function handleOperatorAccess(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!operatorToken.trim()) { setOperatorMessage("Enter the operator token configured by the system administrator."); return; }
+    setOperatorLoading(true); setOperatorMessage("Checking operator credentials…");
+    try {
+      const response = await fetch("/api/operator/status", { headers: { Authorization: "Bearer " + operatorToken.trim() } });
+      if (!response.ok) throw new Error(response.status === 503 ? "Operator access is not configured on this server." : "Authentication failed. Check the token and try again.");
+      const data = await response.json(); setOperatorAuthenticated(true);
+      setOperatorMessage("Authenticated as " + data.operator.role + ". This prototype provides read-only status access.");
+    } catch (error) {
+      setOperatorAuthenticated(false); setOperatorMessage(error instanceof Error ? error.message : "Operator authentication failed.");
+    } finally { setOperatorLoading(false); }
+  }
 
   async function handleSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -123,6 +141,17 @@ export default function Home() {
             <div><span>EXTERNAL SYNC</span><h3>{network.external_sync_enabled ? "ENABLED" : "DISABLED"}</h3><p>External synchronisation is opt-in.</p></div>
           </div>
         ) : <p className="message">Network status service is not reachable.</p>}
+      </section>
+
+      <section className="workspace" aria-labelledby="operator-title">
+        <div className="section-heading"><div><div className="eyebrow muted">NOMAD GOVERNANCE</div><h2 id="operator-title">Operator access</h2></div><span className="local-tag">{operatorAuthenticated ? "AUTHENTICATED" : "PROTECTED"}</span></div>
+        <form className="search-form" onSubmit={handleOperatorAccess}>
+          <label className="sr-only" htmlFor="operator-token">Operator bearer token</label>
+          <input id="operator-token" type="password" autoComplete="off" value={operatorToken} onChange={(event) => setOperatorToken(event.target.value)} placeholder="Enter server-configured operator token" />
+          <button type="submit" disabled={operatorLoading}>{operatorLoading ? "Checking…" : "Authenticate"}</button>
+        </form>
+        <p className="message" role="status">{operatorMessage}</p>
+        <p className="message">The token remains in this page’s memory only; it is not written to browser storage. This is a single-operator bootstrap prototype, not multi-user account management.</p>
       </section>
 
       <section className="workspace" aria-labelledby="search-title">
