@@ -10,7 +10,7 @@ def test_chunking_splits_large_documents():
 def test_index_build_and_semantic_search_use_local_vectors(tmp_path, monkeypatch):
     knowledge = tmp_path / "knowledge"
     knowledge.mkdir()
-    (knowledge / "solar.md").write_text("# Solar power\\n\\nSolar panels convert sunlight into electricity.", encoding="utf-8")
+    (knowledge / "solar.md").write_text("# Solar power\n\nSolar panels convert sunlight into electricity.", encoding="utf-8")
     db = tmp_path / "index.sqlite3"
     monkeypatch.setenv("NOMAD_EMBEDDINGS_PROVIDER", "ollama")
     monkeypatch.setenv("NOMAD_INDEX_PATH", str(db))
@@ -25,7 +25,7 @@ def test_index_build_and_semantic_search_use_local_vectors(tmp_path, monkeypatch
 def test_lexical_fallback_when_semantic_is_disabled(tmp_path, monkeypatch):
     knowledge = tmp_path / "knowledge"
     knowledge.mkdir()
-    (knowledge / "learning.md").write_text("# Offline learning\\n\\nLocal resources support education.", encoding="utf-8")
+    (knowledge / "learning.md").write_text("# Offline learning\n\nLocal resources support education.", encoding="utf-8")
     monkeypatch.delenv("NOMAD_EMBEDDINGS_PROVIDER", raising=False)
     results, mode = semantic.search_knowledge("offline learning", knowledge)
     assert mode == "local-lexical-search"
