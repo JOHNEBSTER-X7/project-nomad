@@ -115,9 +115,11 @@ docker compose up --build
 
 Then open:
 
-- Web portal: http://localhost:3000
-- API health: http://localhost:8000/health
-- API search: http://localhost:8000/api/knowledge/search?q=offline%20learning
+- Web portal on the host: http://localhost:3000
+- API health on the host: http://localhost:8000/health
+- API search on the host: http://localhost:8000/api/knowledge/search?q=offline%20learning
+
+For other devices on the same local network, open `http://<NOMAD-SERVER-LAN-IP>:3000`. The browser sends API requests to the same web origin; the NOMAD web container proxies them to the API over the private Docker network. The API port is bound to host loopback only and is not directly exposed to the LAN.
 
 ### Run services without Docker
 
