@@ -11,7 +11,8 @@ Add a locally hosted, opt-in language-model capability without making the core p
 - When enabled, the API checks the configured local Ollama endpoint and model.
 - The answer endpoint retrieves matching local Markdown/text excerpts and sends only those excerpts plus the question to the configured local runtime.
 - The response returns source identifiers and instructs the model to cite excerpts as [1], [2].
-- The model is instructed to acknowledge when the local library lacks sufficient evidence.
+- If lexical retrieval finds no local source, the API returns a fixed insufficient-evidence response and does not call the model.
+- Retrieved documents are explicitly treated as untrusted reference data in the model prompt; prompt-injection resistance is a mitigation, not a guarantee.
 - No hosted model provider, external telemetry or student-data training path is implemented.
 
 ## Configuration
@@ -36,6 +37,7 @@ The answer endpoint returns HTTP 503 when AI is disabled, the runtime is unavail
 
 - Retrieval is still lexical, not semantic/vector retrieval.
 - Model citations are generated text and are not independently verified; clients should display the returned source list alongside the answer.
+- Prompt-injection instructions in source documents may still influence model behaviour despite defensive prompting; this requires adversarial evaluation.
 - This is not a substitute for teacher review, safeguarding review or factual verification.
 - Do not submit identifiable learner data. Do not use the endpoint for learner profiling, grading or high-stakes decisions.
 - The runtime is not enabled by default. Administrators must deliberately configure it and manage model files and licences.
