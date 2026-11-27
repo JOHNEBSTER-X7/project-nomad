@@ -8,6 +8,7 @@ import math
 import os
 import re
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -117,10 +118,12 @@ def semantic_index_status() -> dict:
     if not db_path.exists():
         return {"enabled": True, "provider": "ollama", "model": model, "indexed_chunks": 0, "message": "Semantic index has not been built."}
     try:
-        with _connect(db_path) as connection:
+        with closing(_connect(db_path)) as connection:
             count = connection.execute("SELECT COUNT(*) FROM knowledge_chunks").fetchone()[0]
-        return {"enabled": True, "provider": "ollama", "model": model, "indexed_chunks": count,
-                "message": "Semantic index ready." if count else "Semantic index is empty."}
+            metadata = connection.execute("SELECT value FROM index_metadata WHERE key='embedding_model'").fetchone()
+        indexed_model = metadata[0] if metadata else None
+        return {"enabled": True, "provider": "ollama", "model": model, "indexed_model": indexed_model, "indexed_chunks": count,
+                "message": "Semantic index ready." if count and indexed_model == model else "Index is empty or was built with a different embedding model."}
     except sqlite3.Error:
         return {"enabled": True, "provider": "ollama", "model": model, "indexed_chunks": 0, "message": "Semantic index could not be read."}
 
@@ -129,17 +132,21 @@ def search_knowledge(query: str, knowledge_dir: Path, limit: int = 8) -> tuple[l
     status = semantic_index_status()
     if not status.get("enabled") or not status.get("indexed_chunks"):
         return search_documents(query, knowledge_dir=knowledge_dir, limit=limit), "local-lexical-search"
+    if status.get("indexed_model") != status.get("model"):
+        return search_documents(query, knowledge_dir=knowledge_dir, limit=limit), "local-lexical-fallback"
     try:
         vector = _embed(query)
         _, _, _, _, db_path = _config()
-        with _connect(db_path) as connection:
+        with closing(_connect(db_path)) as connection:
             rows = connection.execute("SELECT source,title,content,embedding FROM knowledge_chunks").fetchall()
         best = {}
         for source,title,content,stored in rows:
             score = _cosine(vector, json.loads(stored))
             if source not in best or score > best[source]["score"]:
                 best[source] = {"title": title, "source": source, "excerpt": content[:420], "score": round(score, 4)}
-        results = sorted(best.values(), key=lambda item: (-item["score"], item["source"]))[:limit]
+        minimum = float(os.getenv("NOMAD_SEMANTIC_MIN_SCORE", "0.35"))
+        results = [item for item in best.values() if item["score"] >= minimum]
+        results = sorted(results, key=lambda item: (-item["score"], item["source"]))[:limit]
         return results, "local-ollama-semantic-search"
     except (RuntimeError, OSError, ValueError, sqlite3.Error, json.JSONDecodeError):
         return search_documents(query, knowledge_dir=knowledge_dir, limit=limit), "local-lexical-fallback"
