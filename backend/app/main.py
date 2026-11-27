@@ -39,8 +39,10 @@ def ai_answer(request: AskRequest):
     if not status.get("available"):
         raise HTTPException(status_code=503, detail=status.get("message", "Local AI is unavailable."))
     sources = search_documents(request.question, knowledge_dir=_knowledge_dir(), limit=request.limit)
+    if not sources:
+        return {"answer": "The local knowledge library does not contain matching material to answer this question.", "mode": "local-library-insufficient", "sources": [], "source_count": 0, "notice": "No model was called because no supporting local source was found."}
     try:
         answer = generate_local_answer(request.question, sources)
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
-    return {"answer": answer, "mode": "local-ollama-grounded", "sources": [{"title": item["title"], "source": item["source"]} for item in sources], "source_count": len(sources), "notice": "AI-generated response from the configured local model; verify important information with a qualified educator."}
+    return {"answer": answer, "mode": "local-ollama-grounded", "sources": [{"title": item["title"], "source": item["source"]} for item in sources], "source_count": len(sources), "notice": "AI-generated response from the configured local model; verify important information with a qualified educator. Citations in the answer are model-generated and require checking against the listed sources."}
