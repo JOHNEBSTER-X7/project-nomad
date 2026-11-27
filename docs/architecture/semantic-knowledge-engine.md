@@ -22,6 +22,7 @@ V0.3 adds an optional local semantic retrieval path while preserving the V0.1 le
 | `NOMAD_OLLAMA_EMBED_MODEL` | `nomic-embed-text` | Configurable embedding model |
 | `NOMAD_EMBEDDING_TIMEOUT_SECONDS` | `30` | Per-request embedding timeout |
 | `NOMAD_INDEX_PATH` | `.nomad/knowledge.sqlite3` | SQLite index path |
+| `NOMAD_SEMANTIC_MIN_SCORE` | `0.35` | Provisional minimum cosine score; calibrate with evaluation data |
 
 The model name is a starting configuration, not a hardware recommendation. Evaluate language coverage, model licence, memory, latency and energy use on the intended device before selecting it for deployment.
 
@@ -43,7 +44,7 @@ The indexer reads only `.md` and `.txt` files under `NOMAD_KNOWLEDGE_DIR`, skips
 ## Current limitations and gates
 
 - This is a prototype, not a validated multilingual Nigerian-language retrieval system.
-- Cosine similarity has no calibrated relevance threshold yet; results require evaluation.
+- The initial cosine-score threshold is provisional and uncalibrated; results require evaluation before educational use. A query with no chunks above the threshold returns no evidence, preventing downstream AI generation from receiving weak semantic matches.
 - The first version returns the best chunk per source and does not implement reranking or hybrid score fusion.
 - The local SQLite index is not encrypted and has no concurrent multi-writer design.
 - No authentication, role-based access, rate limiting or administrator UI is added here.
