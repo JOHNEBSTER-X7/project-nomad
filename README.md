@@ -3,7 +3,7 @@
 **Community-owned sovereign AI infrastructure for offline-first education, local knowledge access and sustainable community networks.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Status: V0.4 prototype](https://img.shields.io/badge/status-V0.4%20prototype-blue.svg)](#project-status)
+[![Status: V0.5 prototype](https://img.shields.io/badge/status-V0.5%20prototype-blue.svg)](#project-status)
 
 PROJECT NOMAD is an open-source public-interest initiative exploring how schools and communities can own, operate and maintain useful AI and digital knowledge services locally—even when internet connectivity is limited or unavailable.
 
@@ -142,6 +142,12 @@ npm run dev
 
 Open http://localhost:3000. The frontend expects the API at http://localhost:8000 by default. Set `NEXT_PUBLIC_NOMAD_API_URL` before building if a different address is required.
 
+### Configure the prototype operator token
+
+Generate a strong random token on the NOMAD host, for example with `openssl rand -hex 32`. Add it to the private repository-root `.env` file as `NOMAD_OPERATOR_TOKEN=<generated-value>`. Never commit the real value or include it in screenshots. Restart the API container after changing it. If the variable is missing or shorter than 32 characters, operator access remains unavailable.
+
+The protected endpoint is `GET /api/operator/status` and requires `Authorization: Bearer <token>`. The public network status endpoint remains informational and read-only. This prototype does not yet provide individual accounts, MFA, recovery, audit trails, granular roles, rate limiting or session revocation.
+
 ### Run backend tests
 
 From the repository root:
@@ -152,6 +158,8 @@ pytest -q
 ```
 
 ## Current prototype capabilities
+
+V0.5 adds a fail-closed single-operator bearer-token gate for the read-only `/api/operator/status` endpoint. The API reads `NOMAD_OPERATOR_TOKEN`; tokens shorter than 32 characters are rejected as unconfigured. The browser keeps the entered token in page memory only. This is a bootstrap control, not multi-user identity or production-grade security. Do not expose the prototype to untrusted networks. See [operator access control](docs/architecture/operator-access-control.md).
 
 V0.4 adds a local infrastructure status endpoint and a basic operator status view for the API, optional local AI, knowledge index, configured network mode and external-sync setting. It deliberately does not scan the LAN, administer Wi-Fi clients or expose device addresses.
 
@@ -193,7 +201,7 @@ Check `/api/knowledge/index/status`. The search endpoint uses local semantic ret
 
 ## Project status
 
-**Current stage: V0.4 network infrastructure foundation in development; research, design and partner discovery continue.**
+**Current stage: V0.5 operator access-control foundation in development; research, design and partner discovery continue.**
 
 - [ ] Confirm a Lagos pilot school or educational community.
 - [ ] Recruit research, technical and community collaborators.
