@@ -5,6 +5,24 @@
 
 ## Recommended sequence
 
+### Internal LASUBEB routing — Social Mobilization / Private Partnership Participation
+
+LASUBEB's official departments and statutory-units page identifies **Social Mobilization** as responsible for managing relationships with donor agencies, philanthropists, development partners and community-based organisations. It also lists a **Private Partnership Participation** unit within that department. This is the most relevant named internal route for the initial NOMAD enquiry.
+
+- Official department directory: https://lasubeb.lg.gov.ng/lasubeb-department-statutory-units-key-functions
+- Recommended request: ask the general LASUBEB contact to route the enquiry to the Head of Social Mobilization or the Private Partnership Participation unit.
+- The department page also identifies Schools Support Services and Planning, Research & Statistics (including an ICT unit) as potentially relevant technical/education stakeholders after initial routing.
+
+Do not bypass the official contact channel or assume that a named department has accepted the proposal.
+
+### Official online partner enquiry
+
+LASUBEB maintains a public **Become a LASUBEB Partner** page: https://lasubeb.lg.gov.ng/lasubeb-partners. The page invites prospective partners with ideas and solutions to submit the form. This is an additional official channel, separate from the email already reported as sent.
+
+Before submission, confirm the exact applicant contact details and the partnership category requested by the form. No form submission is recorded by this repository update.
+
+
+
 ### 1. Lagos State Universal Basic Education Board (LASUBEB) — first contact
 
 Why first: LASUBEB's official contact page explicitly invites organisations to become partners. It is therefore the clearest initial route for a basic-education proposal and for asking how to obtain appropriate institutional guidance.
