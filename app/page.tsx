@@ -16,10 +16,6 @@ type SearchResult = {
   score: number;
 };
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_NOMAD_API_URL?.replace(/\/$/, "") ??
-  "http://localhost:8000";
-
 export default function Home() {
   const [health, setHealth] = useState<Health | null>(null);
   const [query, setQuery] = useState("");
@@ -31,7 +27,7 @@ export default function Home() {
 
   useEffect(() => {
     let active = true;
-    fetch(`${API_BASE}/health`)
+    fetch("/health")
       .then((response) => {
         if (!response.ok) throw new Error("Backend unavailable");
         return response.json();
@@ -60,7 +56,7 @@ export default function Home() {
     setMessage("Searching the local knowledge library…");
     try {
       const response = await fetch(
-        `${API_BASE}/api/knowledge/search?q=${encodeURIComponent(cleaned)}&limit=8`
+        `/api/knowledge/search?q=${encodeURIComponent(cleaned)}&limit=8`
       );
       if (!response.ok) throw new Error("The local search service returned an error.");
       const data = await response.json();
