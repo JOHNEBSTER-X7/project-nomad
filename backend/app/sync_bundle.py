@@ -100,8 +100,10 @@ def import_bundle(bundle_id: str, knowledge_dir: Path) -> dict:
     try:
         for item in items:
             target = knowledge_dir / item["target_name"]
+            if target.is_symlink():
+                raise ValueError("An existing imported path is a symbolic link and cannot be trusted.")
             if target.exists():
-                if hashlib.sha256(target.read_bytes()).hexdigest() != item["sha256"]:
+                if not target.is_file() or hashlib.sha256(target.read_bytes()).hexdigest() != item["sha256"]:
                     raise ValueError("An existing imported file failed its integrity check.")
                 state = "already_present"
             else:
