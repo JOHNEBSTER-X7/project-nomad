@@ -10,6 +10,12 @@ services:
       NOMAD_OLLAMA_BASE_URL: ${NOMAD_OLLAMA_BASE_URL:-http://nomad-ollama:11434}
       NOMAD_OLLAMA_MODEL: ${NOMAD_OLLAMA_MODEL:-llama3.2:3b}
       NOMAD_AI_TIMEOUT_SECONDS: ${NOMAD_AI_TIMEOUT_SECONDS:-45}
+      NOMAD_EMBEDDINGS_PROVIDER: ${NOMAD_EMBEDDINGS_PROVIDER:-disabled}
+      NOMAD_OLLAMA_EMBED_MODEL: ${NOMAD_OLLAMA_EMBED_MODEL:-nomic-embed-text}
+      NOMAD_EMBEDDING_TIMEOUT_SECONDS: ${NOMAD_EMBEDDING_TIMEOUT_SECONDS:-30}
+      NOMAD_INDEX_PATH: /data/nomad-knowledge.sqlite3
+    volumes:
+      - nomad-data:/data
     restart: unless-stopped
 
   nomad-web:
@@ -33,4 +39,5 @@ services:
     restart: unless-stopped
 
 volumes:
+  nomad-data:
   nomad-ollama-models:
