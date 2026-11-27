@@ -16,6 +16,7 @@ services:
       NOMAD_INDEX_PATH: /data/nomad-knowledge.sqlite3
       NOMAD_NETWORK_MODE: ${NOMAD_NETWORK_MODE:-lan}
       NOMAD_EXTERNAL_SYNC_ENABLED: ${NOMAD_EXTERNAL_SYNC_ENABLED:-false}
+      NOMAD_OPERATOR_TOKEN: ${NOMAD_OPERATOR_TOKEN:-}
     volumes:
       - nomad-data:/data
     restart: unless-stopped

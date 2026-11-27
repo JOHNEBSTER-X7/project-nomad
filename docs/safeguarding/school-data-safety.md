@@ -16,7 +16,7 @@ The prototype should work with public or otherwise approved educational resource
 
 ## Minimum controls
 
-- Role-based access and secure administrator authentication.
+- Secure administrator authentication and role-based access. The V0.5 token gate is only a single-operator bootstrap and does not complete this requirement.
 - Encryption in transit and appropriate protection at rest.
 - Short, documented retention periods for operational logs.
 - Ability to delete accounts and remove data under an approved process.
